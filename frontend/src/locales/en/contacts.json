@@ -1,0 +1,18 @@
+{
+ "add": "Add contact",
+ "addHint": "Enter the email they use on Lamma. If they are not a member yet, we will send an invitation.",
+ "added": "Contact added",
+ "blocked": "Blocked",
+ "delete": "Delete contact",
+ "deleteConfirm": "Remove {{name}} from your contacts?",
+ "invite": "Invite",
+ "inviteSent": "Invitation sent",
+ "profile": "Contact profile",
+ "search": "Search contacts",
+ "startChat": "Start conversation",
+ "title": "Contacts",
+ "byPhone": "Phone number",
+ "byEmail": "Email",
+ "phoneInvalid": "Enter a valid phone number",
+ "addHintPhone": "Choose the country and type the number. If they're not on Lamma yet, we'll send an invitation."
+}

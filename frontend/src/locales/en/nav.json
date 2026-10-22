@@ -1,0 +1,12 @@
+{
+ "main": "Main navigation",
+ "chats": "Chats",
+ "groups": "Groups",
+ "contacts": "Contacts",
+ "status": "Status",
+ "calls": "Calls",
+ "notifications": "Notifications",
+ "settings": "Settings",
+ "profile": "Profile",
+ "admin": "Admin console"
+}

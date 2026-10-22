@@ -1,0 +1,19 @@
+{
+ "title": "Phone number",
+ "hint": "Verify your number so people can add you by phone. We never show it to strangers.",
+ "label": "Phone number",
+ "country": "Country",
+ "placeholder": "Phone number",
+ "invalid": "Enter a valid phone number for the selected country",
+ "sendCode": "Send verification code",
+ "codeSentTo": "We sent a 6-digit code to",
+ "resend": "Resend code",
+ "resendIn": "Resend in {{seconds}}s",
+ "change": "Change number",
+ "remove": "Remove number",
+ "removeConfirm": "People will no longer be able to find you by this number.",
+ "verified": "Phone number verified",
+ "verifiedBadge": "Verified",
+ "cannotUse": "This number cannot be used",
+ "demoCode": "Demo code: 123456"
+}

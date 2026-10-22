@@ -1,0 +1,17 @@
+{
+ "add": "Add status",
+ "empty": "No recent updates",
+ "expires": "expires in 24h",
+ "expiresHint": "Statuses disappear after 24 hours.",
+ "mine": "My status",
+ "noViewers": "No views yet",
+ "placeholder": "Type a status",
+ "post": "Post",
+ "posted": "Status posted",
+ "recent": "Recent updates",
+ "textRequired": "Write something first",
+ "title": "Status",
+ "viewMine": "View my status",
+ "viewers_one": "{{count}} view",
+ "viewers_other": "{{count}} views"
+}

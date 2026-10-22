@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Semantic tokens derived from the Lamma logo (blue #0A8CFF -> violet #8A2BFF, navy wordmark).
+   Dark is a designed theme, not an inversion. */
+:root, [data-theme='light'] {
+  --bg: #F5F6FC; --surface: #FFFFFF; --surface-2: #ECEEF8; --border: #DEE1F0;
+  --text: #0F1A3D; --text-2: #5A6285;
+  --accent: #3D4BF2; --accent-fg: #FFFFFF;
+  --success: #1A8F62; --warning: #B7791F; --danger: #D64545;
+  --msg-in: #FFFFFF; --msg-in-fg: #0F1A3D; --msg-out: #3D4BF2; --msg-out-fg: #FFFFFF;
+  --brand-gradient: linear-gradient(135deg, #0A8CFF 0%, #2B3BFF 50%, #8A2BFF 100%);
+  color-scheme: light;
+}
+[data-theme='dark'] {
+  --bg: #0D1020; --surface: #151932; --surface-2: #1E2342; --border: #2B3157;
+  --text: #E9ECFA; --text-2: #98A0C4;
+  --accent: #7F8DFF; --accent-fg: #10122B;
+  --success: #3CC48F; --warning: #E5B04A; --danger: #FF7A7A;
+  --msg-in: #1E2342; --msg-in-fg: #E9ECFA; --msg-out: #3A45C9; --msg-out-fg: #FFFFFF;
+  color-scheme: dark;
+}
+
+html { font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif; }
+body { background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+body, .lm-surface { transition: background-color .2s ease, color .2s ease; }
+
+/* Logo lockup: navy wordmark on light, light wordmark on dark. */
+.lm-logo-dark { display: none; }
+[data-theme='dark'] .lm-logo-light { display: none; }
+[data-theme='dark'] .lm-logo-dark { display: block; }
+
+@keyframes lm-pop { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes lm-pulse { 0%,100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 50%, transparent); } 50% { box-shadow: 0 0 0 4px transparent; } }
+@keyframes lm-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@keyframes lm-dot { 0%,80%,100% { opacity: .3; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+.lm-pop { animation: lm-pop .18s ease-out; }
+.lm-online { animation: lm-pulse 2.4s ease-in-out infinite; }
+.lm-skeleton { background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 50%, var(--surface-2) 75%); background-size: 200% 100%; animation: lm-shimmer 1.6s linear infinite; }
+.lm-typing span { display: inline-block; width: 5px; height: 5px; margin-inline: 1px; border-radius: 50%; background: currentColor; animation: lm-dot 1.2s infinite; }
+.lm-typing span:nth-child(2) { animation-delay: .15s; } .lm-typing span:nth-child(3) { animation-delay: .3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* Chat wallpapers, high-contrast and reduced-motion switches (set on <html> by useApplySettings). */
+[data-wp='dots'] [data-wallpaper] { background-image: radial-gradient(var(--border) 1px, transparent 1px); background-size: 18px 18px; }
+[data-wp='gradient'] [data-wallpaper] { background-image: linear-gradient(160deg, color-mix(in srgb, var(--accent) 10%, var(--bg)), var(--bg) 60%); }
+[data-contrast='high'] { --border: #6b7194; --text-2: var(--text); }
+[data-motion='reduce'] *, [data-motion='reduce'] *::before, [data-motion='reduce'] *::after { animation: none !important; transition: none !important; }

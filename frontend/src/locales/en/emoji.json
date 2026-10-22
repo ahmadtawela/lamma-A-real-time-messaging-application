@@ -1,0 +1,23 @@
+{
+ "search": "Search emoji",
+ "recent": "Recently used",
+ "noRecent": "Emojis you use will appear here",
+ "noResults": "No emoji found",
+ "categories": "Emoji categories",
+ "skinTone": "Skin tone",
+ "group_0": "Smileys & emotion",
+ "group_1": "People & body",
+ "group_2": "Animals & nature",
+ "group_3": "Food & drink",
+ "group_4": "Travel & places",
+ "group_5": "Activities",
+ "group_6": "Objects",
+ "group_7": "Symbols",
+ "group_8": "Flags",
+ "tone_0": "Default",
+ "tone_1": "Light",
+ "tone_2": "Medium-light",
+ "tone_3": "Medium",
+ "tone_4": "Medium-dark",
+ "tone_5": "Dark"
+}

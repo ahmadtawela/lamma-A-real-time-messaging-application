@@ -1,0 +1,13 @@
+{
+ "empty": "لا توجد إشعارات جديدة",
+ "markAll": "تحديد الكل كمقروء",
+ "title": "الإشعارات",
+ "unread": "غير مقروء",
+ "type_message": "رسالة جديدة",
+ "type_mention": "إشارة",
+ "type_group_invitation": "دعوة إلى مجموعة",
+ "type_missed_call": "مكالمة فائتة",
+ "type_reaction": "تفاعل جديد",
+ "type_contact_request": "طلب إضافة",
+ "type_system": "النظام"
+}

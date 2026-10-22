@@ -1,0 +1,21 @@
+{
+ "appName": "Lamma",
+ "tagline": "Conversations that bring people together",
+ "save": "Save changes",
+ "cancel": "Cancel",
+ "close": "Close",
+ "retry": "Try again",
+ "language": "Language",
+ "theme": "Theme",
+ "themeLight": "Light",
+ "themeDark": "Dark",
+ "themeSystem": "System",
+ "search": "Search",
+ "loading": "Loading…",
+ "emptyTitle": "No conversations yet",
+ "emptyAction": "Start a new conversation",
+ "noResults": "No results found",
+ "offline": "You're offline",
+ "confirm": "Confirm",
+ "saved": "Changes saved"
+}

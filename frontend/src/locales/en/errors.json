@@ -1,0 +1,10 @@
+{
+ "generic": "Something went wrong",
+ "network": "Network error",
+ "unauthorized": "Unauthorized",
+ "sessionExpired": "Your session has expired. Log in again to continue.",
+ "tooMany": "Too many attempts. Wait a moment and try again.",
+ "loadMessages": "Unable to load messages",
+ "forbidden": "You don't have permission to do that",
+ "notFound": "We couldn't find that page"
+}

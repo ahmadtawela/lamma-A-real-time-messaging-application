@@ -1,0 +1,21 @@
+{
+ "add": "إضافة حالة",
+ "empty": "لا توجد تحديثات حديثة",
+ "expires": "تنتهي خلال 24 ساعة",
+ "expiresHint": "تختفي الحالات بعد 24 ساعة.",
+ "mine": "حالتي",
+ "noViewers": "لا مشاهدات بعد",
+ "placeholder": "اكتب حالة",
+ "post": "نشر",
+ "posted": "تم نشر الحالة",
+ "recent": "آخر التحديثات",
+ "textRequired": "اكتب شيئًا أولًا",
+ "title": "الحالات",
+ "viewMine": "عرض حالتي",
+ "viewers_zero": "لا مشاهدات",
+ "viewers_one": "مشاهدة واحدة",
+ "viewers_two": "مشاهدتان",
+ "viewers_few": "{{count}} مشاهدات",
+ "viewers_many": "{{count}} مشاهدة",
+ "viewers_other": "{{count}} مشاهدة"
+}

@@ -1,0 +1,13 @@
+{
+ "empty": "You're all caught up",
+ "markAll": "Mark all as read",
+ "title": "Notifications",
+ "unread": "Unread",
+ "type_message": "New message",
+ "type_mention": "Mention",
+ "type_group_invitation": "Group invitation",
+ "type_missed_call": "Missed call",
+ "type_reaction": "New reaction",
+ "type_contact_request": "Contact request",
+ "type_system": "System"
+}

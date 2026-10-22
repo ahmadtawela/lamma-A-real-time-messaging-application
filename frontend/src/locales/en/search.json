@@ -1,0 +1,12 @@
+{
+ "hint": "Search messages, people, groups, files, media and links",
+ "placeholder": "Type to search…",
+ "title": "Search",
+ "all": "All",
+ "messages": "Messages",
+ "users": "People",
+ "groups": "Groups",
+ "files": "Files",
+ "media": "Media",
+ "links": "Links"
+}
