@@ -41,6 +41,8 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
         // Profile / account
         Route::put('/user', [ProfileController::class, 'update']);
         Route::put('/user/preferences', [ProfileController::class, 'preferences']);
+        Route::get('/user/sessions', [ProfileController::class, 'sessions']);
+        Route::delete('/user/sessions/{id}', [ProfileController::class, 'destroySession'])->where('id', '[A-Za-z0-9]+');
         Route::post('/user/phone', [ProfileController::class, 'requestPhone'])->middleware('throttle:auth-sensitive');
         Route::post('/user/phone/verify', [ProfileController::class, 'verifyPhone'])->middleware('throttle:auth-sensitive');
         Route::delete('/user/phone', [ProfileController::class, 'removePhone']);

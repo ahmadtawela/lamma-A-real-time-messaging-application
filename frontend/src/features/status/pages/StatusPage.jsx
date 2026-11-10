@@ -46,7 +46,11 @@ export default function StatusPage() {
   const toast = useToast();
   const me = useAuthStore((s) => s.user.id);
   const users = useUsersStore((s) => s.byId);
-  const privacy = useSettingsStore((s) => s.statusPrivacy); const setSetting = useSettingsStore((s) => s.set);
+  const privacy = useSettingsStore((s) => s.statusPrivacy); const setSetting = useSettingsStore((s) => s.setPrivacy);
+  const updatePrivacy = async (patch) => {
+    try { await setSetting(patch); }
+    catch (error) { toast(error.message || t('errors.generic'), 'error'); }
+  };
   const [state, setState] = useState({ status: 'loading', data: [], error: null });
   const [composer, setComposer] = useState(false); const [viewing, setViewing] = useState(null); const [color, setColor] = useState(COLORS[0]); const [image, setImage] = useState(null); const [imageFile, setImageFile] = useState(null);
   const load = () => { setState((s) => ({ ...s, status: 'loading' })); statusService.list().then(({ data }) => setState({ status: 'ready', data, error: null })).catch((error) => setState({ status: 'error', data: [], error })); };
@@ -79,7 +83,7 @@ export default function StatusPage() {
           {form.field('text') && <p className="text-sm text-danger">{t('status.textRequired')}</p>}
           <div className="flex items-center gap-2">{COLORS.map((c) => <button type="button" key={c} onClick={() => { setColor(c); setImage(null); setImageFile(null); }} aria-label={c} aria-pressed={color === c && !image} className={`h-7 w-7 rounded-full ${color === c && !image ? 'ring-2 ring-text-1 ring-offset-2 ring-offset-surface' : ''}`} style={{ background: c }} />)}
             <label className="ms-auto cursor-pointer rounded-lg p-2 hover:bg-surface-2"><ImageIcon className="h-5 w-5" /><input type="file" accept="image/*,video/*" className="sr-only" aria-label={t('chat.photoVideo')} onChange={(e) => { const f = e.target.files[0]; if (f) { setImage(URL.createObjectURL(f)); setImageFile(f); } }} /></label><span className="hidden"><Type /></span></div>
-          <Select label={t('settings.statusPrivacy')} value={privacy} onChange={(v) => setSetting({ statusPrivacy: v })} options={['everyone', 'contacts'].map((v) => ({ value: v, label: t(`settings.vis_${v}`) }))} />
+          <Select label={t('settings.statusPrivacy')} value={privacy} onChange={(v) => updatePrivacy({ statusPrivacy: v })} options={['everyone', 'contacts'].map((v) => ({ value: v, label: t(`settings.vis_${v}`) }))} />
           <p className="text-xs text-text-2">{t('status.expiresHint')}</p>
           <div className="flex justify-end gap-2"><Button type="button" variant="ghost" onClick={() => setComposer(false)}>{t('common.cancel')}</Button><Button type="submit" loading={form.busy}><Send className="h-4 w-4 rtl:-scale-x-100" />{t('status.post')}</Button></div>
         </form>

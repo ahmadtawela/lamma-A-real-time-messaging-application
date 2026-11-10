@@ -55,6 +55,11 @@ const adminSettings = { registration_open: true, require_email_verification: tru
 const contactsAdded = new Set();
 let pendingPhone = null;
 const deletedContacts = new Set();
+const mockSessions = [
+  { id: 'mock-current-session', ip_address: '127.0.0.1', user_agent: 'Current browser session', last_activity: new Date().toISOString(), is_current: true },
+  { id: 'mock-mobile-session', ip_address: '127.0.0.1', user_agent: 'Lamma · Mobile app', last_activity: new Date(Date.now() - DAY).toISOString(), is_current: false },
+];
+let twoFactorPending = false;
 
 export const appRoutes = ({ fail, requireAuth, me, now, view, HttpFail }) => {
   const admin = () => { requireAuth(); if (!me().is_admin) fail(403, 'This action is unauthorized.'); };
@@ -84,6 +89,15 @@ export const appRoutes = ({ fail, requireAuth, me, now, view, HttpFail }) => {
     }],
 
     ['GET', /^\/api\/contacts$/, async ({ params }) => { requireAuth(); const q = (params.q ?? '').toLowerCase(); return [200, { data: users.filter((u) => u.id !== ME_ID && !deletedContacts.has(u.id) && (!q || u.name.toLowerCase().includes(q) || u.username.includes(q))) }]; }],
+    ['GET', /^\/api\/user\/sessions$/, async () => { requireAuth(); return [200, { data: mockSessions }]; }],
+    ['DELETE', /^\/api\/user\/sessions\/([^/]+)$/, async ({ match }) => {
+      requireAuth();
+      const session = mockSessions.find((item) => item.id === match[1]);
+      if (!session) fail(404, 'Session not found.');
+      if (session.is_current) fail(422, 'You cannot log out the current session here.');
+      mockSessions.splice(mockSessions.indexOf(session), 1);
+      return [204, null];
+    }],
 
     // ----- conversations / messages extras
     ['POST', /^\/api\/conversations$/, async ({ body }) => {
@@ -183,6 +197,24 @@ export const appRoutes = ({ fail, requireAuth, me, now, view, HttpFail }) => {
       return [200, { data: me() }];
     }],
     ['DELETE', /^\/api\/user\/phone$/, async () => { requireAuth(); Object.assign(me(), { phone: null, phone_verified: false }); return [200, { data: me() }]; }],
+    ['POST', /^\/api\/user\/two-factor$/, async () => {
+      requireAuth();
+      if (me().two_factor) fail(409, 'Two-factor authentication is already enabled.');
+      twoFactorPending = true;
+      return [200, { secret: 'JBSWY3DPEHPK3PXP', otpauth_url: 'otpauth://totp/Lamma:demo@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Lamma' }];
+    }],
+    ['POST', /^\/api\/user\/two-factor\/confirm$/, async ({ body }) => {
+      requireAuth();
+      if (!twoFactorPending || body.code !== '123456') fail(422, 'The provided code was invalid.', { code: ['The provided code was invalid.'] });
+      me().two_factor = true; twoFactorPending = false;
+      return [200, { recovery_codes: ['demo-recovery-1', 'demo-recovery-2', 'demo-recovery-3'] }];
+    }],
+    ['DELETE', /^\/api\/user\/two-factor$/, async ({ body }) => {
+      requireAuth();
+      if (body.password !== 'password') fail(422, 'The given data was invalid.', { password: ['The password is incorrect.'] });
+      me().two_factor = false;
+      return [204, null];
+    }],
 
     // ----- avatars (multipart)
     ['POST', /^\/api\/user\/avatar$/, async ({ config }) => {

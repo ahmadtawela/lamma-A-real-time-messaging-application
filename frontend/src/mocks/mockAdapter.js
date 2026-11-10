@@ -51,6 +51,12 @@ const routes = [
   ['GET', /^\/api\/user$/, async () => { requireAuth(); return [200, { data: me() }]; }],
   ['PUT', /^\/api\/user\/preferences$/, async ({ body }) => { requireAuth(); Object.assign(me(), body); return [200, { data: me() }]; }],
   ['PUT', /^\/api\/user$/, async ({ body }) => { requireAuth(); Object.assign(me(), body); return [200, { data: me() }]; }],
+  ['DELETE', /^\/api\/user$/, async ({ body }) => {
+    requireAuth();
+    if (body.password !== 'password') fail(422, 'The given data was invalid.', { password: ['The password is incorrect.'] });
+    localStorage.removeItem(AUTH_KEY);
+    return [204, null];
+  }],
   ['GET', /^\/api\/(users|contacts)$/, async ({ params }) => {
     requireAuth();
     const q = (params.q ?? '').toLowerCase();

@@ -24,6 +24,10 @@ export default function PhoneVerification() {
 
   useEffect(() => { if (wait <= 0) return undefined; const id = setTimeout(() => setWait((w) => w - 1), 1000); return () => clearTimeout(id); }, [wait]);
   const fail = (e) => setError(e.status === 429 ? t('errors.tooMany') : e.field?.('phone') ? t('phone.cannotUse') : e.field?.('code') ? t('auth.codeInvalid') : t('errors.generic'));
+  const updatePrivacy = async (patch) => {
+    try { await setPrivacy(patch); }
+    catch (e) { toast(e.message || t('errors.generic'), 'error'); }
+  };
 
   const send = async () => {
     setBusy(true); setError(null);
@@ -46,7 +50,7 @@ export default function PhoneVerification() {
       {step === 'verified' && (
         <div className="space-y-3">
           <p className="flex items-center gap-2"><bdi dir="ltr" className="font-medium">{user.phone}</bdi><span className="inline-flex items-center gap-1 rounded bg-success/15 px-1.5 text-xs text-success"><BadgeCheck className="h-3.5 w-3.5" />{t('phone.verifiedBadge')}</span></p>
-          <div className="flex items-center justify-between gap-4 text-sm"><span>{t('settings.phoneDiscoverable')}<span className="block text-xs text-text-2">{t('settings.phoneDiscoverableHint')}</span></span><Toggle label={t('settings.phoneDiscoverable')} checked={phoneDiscoverable} onChange={(v) => setPrivacy({ phoneDiscoverable: v })} /></div>
+          <div className="flex items-center justify-between gap-4 text-sm"><span>{t('settings.phoneDiscoverable')}<span className="block text-xs text-text-2">{t('settings.phoneDiscoverableHint')}</span></span><Toggle label={t('settings.phoneDiscoverable')} checked={phoneDiscoverable} onChange={(v) => updatePrivacy({ phoneDiscoverable: v })} /></div>
           <div className="flex gap-2"><Button size="sm" variant="secondary" onClick={() => setStep('enter')}>{t('phone.change')}</Button><Button size="sm" variant="ghost" onClick={() => setConfirm(true)}><Trash2 className="h-4 w-4" />{t('phone.remove')}</Button></div>
         </div>
       )}

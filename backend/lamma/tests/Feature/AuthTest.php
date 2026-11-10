@@ -94,7 +94,25 @@ class AuthTest extends TestCase
     {
         /** @var User $me */
         $me = User::factory()->create(['locale' => 'en']);
-        $this->actingAs($me, 'sanctum')->putJson('/api/user/preferences', ['locale' => 'ar'])->assertOk()->assertJsonPath('data.locale', 'ar');
+        $this->actingAs($me, 'sanctum')->putJson('/api/user/preferences', ['locale' => 'ar', 'settings' => [
+            'status_privacy' => 'contacts',
+            'notif_messages' => false,
+            'notif_calls' => true,
+        ]])->assertOk()
+            ->assertJsonPath('data.locale', 'ar')
+            ->assertJsonPath('data.settings.status_privacy', 'contacts')
+            ->assertJsonPath('data.settings.notif_messages', false)
+            ->assertJsonPath('data.settings.notif_calls', true);
         $this->actingAs($me, 'sanctum')->putJson('/api/user/preferences', ['locale' => 'fr'])->assertStatus(422);
+        $this->actingAs($me, 'sanctum')->putJson('/api/user/preferences', ['settings' => ['notif_messages' => 'yes']])->assertStatus(422);
+    }
+
+    public function test_account_deletion_requires_the_current_password_and_removes_the_user(): void
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user, 'sanctum')->deleteJson('/api/user', ['password' => 'wrong-password'])->assertStatus(422);
+        $this->assertDatabaseHas('users', ['id' => $user->id]);
+        $this->actingAs($user, 'sanctum')->deleteJson('/api/user', ['password' => 'password'])->assertNoContent();
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
     }
 }

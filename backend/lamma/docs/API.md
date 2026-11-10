@@ -12,9 +12,11 @@ Success: single → `{data:{...}}`, list → `{data:[...]}`, messages → `{data
 | GET  | /api/email/verify/{id}/{hash} | signed link from the mail → redirects to the app |
 | POST | /api/email/verification-notification | resend |
 | GET  | /api/user | `{data:user}` incl. `locale`, `is_admin`, `email_verified_at` |
-| PUT  | /api/user, /api/user/preferences, /api/user/password | preferences: `{locale}` and/or `{settings:{...}}` |
+| PUT  | /api/user, /api/user/preferences, /api/user/password | preferences: `{locale}` and/or `{settings:{last_seen_visibility,profile_photo_visibility,about_visibility,read_receipts,phone_discoverable,status_privacy,notif_messages,notif_groups,notif_calls,notif_preview,notif_sound}}` |
+| DELETE | /api/user | requires `{password}`; permanently deletes the authenticated account |
+| GET/DELETE | /api/user/sessions · /api/user/sessions/{id} | lists active database-backed sessions; revoke another session only (current session cannot be revoked here) |
 | POST | /api/user/avatar | multipart `avatar` |
-| POST/POST/DELETE | /api/user/two-factor, /confirm | setup → `{secret, otpauth_url}`; confirm → `{recovery_codes}` (once) |
+| POST/POST/DELETE | /api/user/two-factor, /confirm | setup → `{secret, otpauth_url}`; confirm `{code}` → `{recovery_codes}` (once); disable requires `{password}` |
 | POST/POST/DELETE | /api/user/phone · /api/user/phone/verify · /api/user/phone | `{phone:"+905551112233"}` → SMS code · `{code}` → user · remove; 429 on resend within 60 s |
 | GET  | /api/users?q= | name/username search (no emails) |
 | GET/POST | /api/conversations | `?filter=all|unread|groups|contacts|archived&q=` · POST `{user_id}` |

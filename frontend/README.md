@@ -1,7 +1,7 @@
 # Lamma (لمّة) — Web client
 
 Bilingual (Arabic RTL / English LTR) real-time messaging front-end. **React (JavaScript + JSX) · Vite · Tailwind CSS.**
-Runs on an **in-memory mock backend** out of the box, and talks to the Laravel API (see the `lamma-api` project) with one switch.
+Uses the Laravel API in `../backend/lamma` by default. An in-memory mock backend is available only when explicitly enabled.
 
 ## 1) Install & run
 Needs **Node.js 18.18+** (20 LTS recommended).
@@ -16,14 +16,14 @@ Packages (all in `package.json`): `react`, `react-dom`, `react-router-dom@6`, `z
 **Mock mode login:** any email + password `password` · email containing `2fa` → code `123456` (recovery `recovery-1234`) · `/verify-device` code `654321` · the mock user is an admin (`/admin`).
 Calls in mock mode: *Calls → Simulate incoming call*, or call anyone from a chat (your own camera is looped back as the "remote" video; user #9 answers "busy").
 
-## 2) Use the real Laravel backend
-Copy `.env.example` → `.env`:
+## 2) Run with the Laravel backend
+Start Laravel from `../backend/lamma` (`php artisan serve`, normally at `http://localhost:8000`) and copy `.env.example` → `.env`:
 ```
 VITE_USE_MOCKS=false
-VITE_API_URL=http://localhost:8000
+VITE_API_URL=
 VITE_REVERB_APP_KEY=<REVERB_APP_KEY from Laravel>   VITE_REVERB_HOST=localhost   VITE_REVERB_PORT=8080   VITE_REVERB_SCHEME=http
 ```
-Open the app on `http://localhost:5173` and the API on `http://localhost:8000` (both `localhost`, same site → Sanctum cookies work). Nothing in `features/*/components|pages|store` changes.
+The empty API URL uses the Vite proxy to Laravel. Open the app on `http://localhost:5173`; keep both addresses on `localhost` so Sanctum cookies work. Set `VITE_USE_MOCKS=true` only when intentionally running the in-memory demo. Restart Vite after changing `.env`.
 
 ## 3) Folder structure (feature-sliced, one alias `@` → `src`)
 ```

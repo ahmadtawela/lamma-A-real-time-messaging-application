@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Illuminate\Validation\ValidationException;
@@ -40,6 +41,12 @@ class ProfileController extends Controller
             'settings.about_visibility' => ['sometimes', 'in:everyone,contacts,nobody'],
             'settings.read_receipts' => ['sometimes', 'boolean'],
             'settings.phone_discoverable' => ['sometimes', 'boolean'],
+            'settings.status_privacy' => ['sometimes', 'in:everyone,contacts'],
+            'settings.notif_messages' => ['sometimes', 'boolean'],
+            'settings.notif_groups' => ['sometimes', 'boolean'],
+            'settings.notif_calls' => ['sometimes', 'boolean'],
+            'settings.notif_preview' => ['sometimes', 'boolean'],
+            'settings.notif_sound' => ['sometimes', 'boolean'],
         ]);
         $user = $request->user();
         if (isset($data['locale'])) {
@@ -51,6 +58,40 @@ class ProfileController extends Controller
         $user->save();
 
         return new UserResource($user);
+    }
+
+    public function sessions(Request $request): JsonResponse
+    {
+        abort_unless(config('session.driver') === 'database', 503, __('Session management requires the database session driver.'));
+        $currentId = $request->session()->getId();
+        $cutoff = now()->subMinutes(config('session.lifetime'))->timestamp;
+        $rows = DB::table(config('session.table', 'sessions'))
+            ->where('user_id', $request->user()->id)
+            ->where('last_activity', '>=', $cutoff)
+            ->orderByDesc('last_activity')
+            ->get(['id', 'ip_address', 'user_agent', 'last_activity']);
+
+        return response()->json(['data' => $rows->map(fn ($session) => [
+            'id' => $session->id,
+            'ip_address' => $session->ip_address,
+            'user_agent' => $session->user_agent ?? '',
+            'last_activity' => date(DATE_ATOM, $session->last_activity),
+            'is_current' => hash_equals($currentId, $session->id),
+        ])]);
+    }
+
+    public function destroySession(Request $request, string $id): JsonResponse
+    {
+        abort_unless(config('session.driver') === 'database', 503, __('Session management requires the database session driver.'));
+        $sessions = DB::table(config('session.table', 'sessions'))
+            ->where('id', $id)
+            ->where('user_id', $request->user()->id);
+        $session = $sessions->first();
+        abort_unless($session, 404);
+        abort_if(hash_equals($request->session()->getId(), $id), 422, __('You cannot log out the current session here.'));
+        $sessions->delete();
+
+        return response()->json(null, 204);
     }
 
     public function avatar(Request $request): UserResource
@@ -136,6 +177,9 @@ class ProfileController extends Controller
         abort_if($user->is_admin && \App\Models\User::where('is_admin', true)->count() === 1, 403, __('The last admin cannot be deleted.'));
         auth()->guard('web')->logout();
         $request->session()->invalidate();
+        if (config('session.driver') === 'database') {
+            DB::table(config('session.table', 'sessions'))->where('user_id', $user->id)->delete();
+        }
         $user->delete();
 
         return response()->json(null, 204);

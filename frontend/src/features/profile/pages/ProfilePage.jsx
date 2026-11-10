@@ -21,6 +21,10 @@ export default function ProfilePage() {
   const toast = useToast();
   const user = useAuthStore((s) => s.user); const patchUser = useAuthStore((s) => s.patchUser); const upsert = useUsersStore((s) => s.upsert);
   const { lastSeenVisibility, profilePhotoVisibility, setPrivacy } = useSettingsStore();
+  const updatePrivacy = async (patch) => {
+    try { await setPrivacy(patch); }
+    catch (error) { toast(error.message || t('errors.generic'), 'error'); }
+  };
   const [editing, setEditing] = useState(false);
   const form = useApiForm({ name: user.name, username: user.username, about: user.about ?? '' }, async (v) => {
     const { data } = await userService.updateProfile(v); patchUser(data); upsert(data); setEditing(false); toast(t('common.saved'), 'success');
@@ -55,8 +59,8 @@ export default function ProfilePage() {
 
       <section className="mb-4 space-y-3 rounded-xl border border-border bg-surface p-5">
         <h2 className="flex items-center gap-2 font-semibold"><Lock className="h-4 w-4" />{t('settings.privacy')}</h2>
-        <Select label={t('settings.lastSeenVisibility')} value={lastSeenVisibility} onChange={(v) => setPrivacy({ lastSeenVisibility: v })} options={vis} />
-        <Select label={t('settings.profilePhotoVisibility')} value={profilePhotoVisibility} onChange={(v) => setPrivacy({ profilePhotoVisibility: v })} options={vis} />
+        <Select label={t('settings.lastSeenVisibility')} value={lastSeenVisibility} onChange={(v) => updatePrivacy({ lastSeenVisibility: v })} options={vis} />
+        <Select label={t('settings.profilePhotoVisibility')} value={profilePhotoVisibility} onChange={(v) => updatePrivacy({ profilePhotoVisibility: v })} options={vis} />
         <p className="flex items-center gap-2 text-sm"><ShieldCheck className="h-4 w-4 text-success" /><Link to="/app/settings" className="text-accent hover:underline">{t('profile.moreSecurity')}</Link></p>
       </section>
 
